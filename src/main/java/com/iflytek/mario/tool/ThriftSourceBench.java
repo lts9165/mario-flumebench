@@ -17,6 +17,7 @@ public class ThriftSourceBench implements Tool {
   private static int eventSize;
   private static int threadsNum;
   private static int eventNum;
+  private static int batchSize;
   public ThriftSourceBench() {
     opt.addOption("h", "help", false, "Print help for this bench tool");
     opt.addOption("t", "threads", true, "The num of bench threads");
@@ -24,6 +25,7 @@ public class ThriftSourceBench implements Tool {
     opt.addOption("n", "num", true, "The num of events each thread send");
     opt.addOption("i", "ip", true, "Flume ip");
     opt.addOption("p", "port", true, "Flume port");
+    opt.addOption("b", "batchsize", true, "Batch Size");
   }
   
   @Override
@@ -42,11 +44,18 @@ public class ThriftSourceBench implements Tool {
         eventSize = Integer.parseInt(cl.getOptionValue("s"));
         threadsNum = Integer.parseInt(cl.getOptionValue("t"));
         eventNum = Integer.parseInt(cl.getOptionValue("n"));
+        if (cl.getOptionValue("b") == null)
+          batchSize = 1000;
+        else
+          batchSize = Integer.parseInt(cl.getOptionValue("b"));
       }
     } catch (ParseException e) {
       HelpFormatter f = new HelpFormatter();
       f.printHelp("thriftsource", opt);
+      return 0;
     }
+  
+    
     return 0;
   }
   
